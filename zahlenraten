@@ -1,0 +1,35 @@
+#setzt anzeige von befehlen zur laufzeit, quasi debugmode
+#set -x
+
+
+#echo get input - untergrenze obergrenze 
+echo untergrenze: 
+read untergrenze 
+echo obergrenze: 
+read obergrenze 
+if [ $obergrenze -lt $untergrenze ]
+	then
+	echo grenzen kaputt 
+	exit 1 
+fi
+myrandomzahl=$((  $(( $RANDOM % $(( $obergrenze - $untergrenze )) )) + $untergrenze ))
+
+for (( i=1 ; i<=5 ; i++ ))
+do
+echo "my tip:"
+read mytip
+echo $i\-ter Versuch
+		if [ $mytip -eq $myrandomzahl ]
+		then 
+			echo treffer '$treffer' \= \$myrandomzahl 
+			treffer= "true"
+			var i = i + 5
+		elif [ $mytip -lt $myrandomzahl ]
+		then
+			echo kleiner 
+		elif [ $mytip -gt $myrandomzahl ]
+		then
+			echo groesser
+		fi
+done
+

@@ -1,0 +1,84 @@
+	echo arbeitsumgebung erstellen  
+trashdir="trashdir"
+	mkdir $trashdir 
+	touch bild1.ps bild2.ps bild3.ps
+#end arbeitsumgebung
+
+#helptext
+	helptext="Syntax: del2 [-i] [-f] [-e] dateien"
+	if [ $# -eq 0 ]
+		then
+			echo $helptext
+			exit 2
+		fi
+#end helptext
+
+#parameter parsen
+	#erinnerung: "test" wird durch [] ersetzt
+	#$# um anzahl parameter zu zählen
+anzParam=$#
+
+for anzParam 
+	do
+		#echo $anzParam
+		case $anzParam in
+			-*) case $anzParam in 
+					-*i*) optI=1; #echo will get confirmation: $anzParam;;
+				esac
+				case $anzParam in
+					-*f*) optF=1; #echo will force into trash-yes-we-can: $anzParam;
+				esac
+				case $anzParam in 
+					-*e*) optE=1; #echo will empty trashdir;
+				esac
+				case $anzParam in
+					-*[\?]*) echo $helptext; exit 3;;
+				esac;;
+			[!-]*) fileSpec="$fileSpec $anzParam";;
+		esac
+	done
+
+echo fileSpec: $fileSpec
+echo optF: $optF
+echo optI: $optI
+
+if [ $optE == 1 ]
+	then
+		cmd="rm -r1 $trashdir"
+		echo $cmd
+		exit
+fi
+
+for datei in $fileSpec
+do
+	if [ $optI == 1 ]
+		then
+			echo "Soll das Element gelöscht werden? (j/n)"
+			read antwortI
+		else
+			antwortI=j
+	fi
+
+	if [ -e $trashdir/$datei ]
+		then
+			echo $datei existiert im trash
+			if [ $optF != 1 ]
+				then
+					echo "Soll das Element im Trash überschrieben werden? (j/n)"
+					read antwortF
+				else
+					antwortF=j
+			fi
+		else
+			antwortF=j
+	fi
+	
+	if [ $antwortI$antwortF == jj ] 
+		then	
+			cmd="mv $datei $trashdir/$datei"
+			echo $cmd
+		else 
+			echo file: $datei \(i: $antwortI, f: $antwortF\)
+	fi
+done
+

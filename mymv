@@ -1,0 +1,51 @@
+#syntax: ./mymv 'bil*.ps bakdatei*.bak'  -  siehe folien
+
+
+#anzahl paramter prüfen - für die bash übergeben wir nur einen parameter, weil wir ihn in hochkommas übergeben
+	if [ $# -ne 1 ]  
+	then
+		echo bitte nur ein parameter!
+		exit 4
+	fi
+
+#der param-string muss abgeschnipselt werden
+	param=$1
+		echo parameter: $param
+			
+		quelle=${param% *}
+		ziel=${param#* }
+		
+	echo quelle: $quelle
+	echo ziel: $ziel
+	
+#note zum zerlegen: ein stern ist escaped, das ist das zeichen aus dem parameter		
+#quellen zerlegen
+	quelle_pre=${quelle%\**}
+	quelle_post=${quelle#*\*}
+	
+	echo quelle_pre: $quelle_pre
+	echo quelle_post: $quelle_post
+	
+#ziel zerlegen
+	ziel_pre=${ziel%\**}
+	ziel_post=${ziel#*\*}
+	
+	echo ziel_pre: $ziel_pre
+	echo ziel_post: $ziel_post
+
+#für alle dateien, die auf quelle passen
+	for datei in $quelle 
+	do
+		mittelteil=${datei%$quelle_post}
+		mittelteil=${mittelteil#$quelle_pre}
+		commando="mv $datei $ziel_pre$mittelteil$ziel_post"
+		echo $commando
+	done
+
+#parameter lesen
+
+#parameter trennen
+
+#liste treffer erster parameter ausgeben
+
+#liste anwenden
